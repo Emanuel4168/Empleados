@@ -10,11 +10,11 @@ public class Main
 	private static Cliente clienteMenor;
 	private static int numEmpleados=5;
 	private static Cliente [] clientes=new Cliente[numEmpleados];
-	
+	private static int indiceArreglo=-1;
 	
 	public static void main(String[] args)
 	{
-	    int opcion=0,indice=-1;
+	    int opcion=0;
 	    while(opcion!=4)
 	    {
 	    	displayMenu();
@@ -22,8 +22,8 @@ public class Main
 	    	switch(opcion)
 	    	{
 	    	case 1:
-	    		indice++;
-	    		clientes[indice]=guardarCliente();
+	    		indiceArreglo++;
+	    		clientes[indiceArreglo]=guardarCliente();
 	    		break;
 	    	case 2:
 	    		break;
@@ -47,10 +47,12 @@ public class Main
         System.out.println("Ingrese Clave del empleado");
 		clave=scan.nextInt();
 		System.out.println("Ingrese Nombre del empleado");
+		scan.nextLine();
 		nombre=scan.nextLine();
 		System.out.println("Ingrese edad del empleado");
 		edad=scan.nextInt();
 		System.out.println("Ingrese Estado Civil del empleado");
+		scan.nextLine();
 		estadoCivil=scan.nextLine().charAt(0);
 		cliente=new Cliente(clave,nombre,edad,estadoCivil,-1);
 		cliente.siguiente=calcularSiguiente(cliente);
@@ -104,7 +106,7 @@ public class Main
 	private static int buscarPosicion(Cliente cliente)
 	{
 		int posicion=-1;
-		for(int i=0;i<clientes.length;i++)
+		for(int i=0;i<indiceArreglo;i++)
 		{
 			if(clientes[i].clave==cliente.clave)
 				posicion=i;
