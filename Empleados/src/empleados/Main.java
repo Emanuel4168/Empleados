@@ -6,23 +6,43 @@ public class Main
 {
 	private static Scanner scan=new Scanner(System.in);
 	private static int inicio=-1;
-	private static Empleado empleadoMayor;
-	private static Empleado empleadoMenor;
+	private static Cliente clienteMayor;
+	private static Cliente clienteMenor;
 	private static int numEmpleados=5;
-	private static Empleado [] empleados=new Empleado[numEmpleados];
+	private static Cliente [] clientes=new Cliente[numEmpleados];
 	
 	
 	public static void main(String[] args)
 	{
-	    
+	    int opcion=0,indice=-1;
+	    while(opcion!=4)
+	    {
+	    	displayMenu();
+	    	opcion=scan.nextInt();
+	    	switch(opcion)
+	    	{
+	    	case 1:
+	    		indice++;
+	    		clientes[indice]=guardarCliente();
+	    		break;
+	    	case 2:
+	    		break;
+	    	case 3:
+	    		break;
+	    	case 4:
+	    		break;
+	    		default:System.out.println("La opción ingresada no es válida");
+	    	}
+	    }
 	}
 	
 	
 	
-	private Empleado guardarEmpleado()
+	private static Cliente guardarCliente()
 	{	
         int clave,edad;
 		String nombre;
+		Cliente cliente;
 		char estadoCivil;
         System.out.println("Ingrese Clave del empleado");
 		clave=scan.nextInt();
@@ -32,40 +52,45 @@ public class Main
 		edad=scan.nextInt();
 		System.out.println("Ingrese Estado Civil del empleado");
 		estadoCivil=scan.nextLine().charAt(0);
-		return null;
+		cliente=new Cliente(clave,nombre,edad,estadoCivil,-1);
+		cliente.siguiente=calcularSiguiente(cliente);
+		return cliente;	
 	}
 	
 	
-	private int calcularSiguiente(Empleado empleado)
+	private static int calcularSiguiente(Cliente cliente)
 	{
 		int siguiente=-1;
-		if(empleados[0]==null)
+		if(clientes[0]==null)
 		{
-			this.empleadoMayor=empleado;
-			this.empleadoMenor=empleado;
-			this.inicio=buscarPosicion(empleado);
+			clienteMayor=cliente;
+			clienteMenor=cliente;
+			inicio=buscarPosicion(cliente);
 		}
 		else
 		{
-			if(empleado.nombre.compareTo(empleadoMenor.nombre)==-1)
+			if(cliente.nombre.compareTo(clienteMenor.nombre)==-1)
 			{
-				siguiente=buscarPosicion(empleadoMenor);
-				this.inicio=buscarPosicion(empleado);
-				this.empleadoMenor=empleado;
+				siguiente=buscarPosicion(clienteMenor);
+				inicio=buscarPosicion(cliente);
+				clienteMenor=cliente;
 			}
-			else if(empleado.nombre.compareTo(empleadoMayor.nombre)==1)
-				this.empleadoMayor=empleado;
+			else if(cliente.nombre.compareTo(clienteMayor.nombre)==1)
+			{
+				clienteMayor.siguiente=buscarPosicion(cliente);
+			    clienteMayor=cliente;
+			}
 			else
 			{
-				int posicionLogica=empleadoMenor.siguiente;
+				int posicionLogica=clienteMenor.siguiente;
 				while(posicionLogica!=-1)
 				{
-					if(empleados[posicionLogica].nombre.compareTo(empleado.nombre)==1)
+					if(clientes[posicionLogica].nombre.compareTo(cliente.nombre)==1)
 					{
-						siguiente=buscarPosicion(empleados[posicionLogica]);
+						siguiente=buscarPosicion(clientes[posicionLogica]);
 						break;
 					}
-					posicionLogica=empleados[posicionLogica].siguiente;
+					posicionLogica=clientes[posicionLogica].siguiente;
 				}
 			}	
 		}
@@ -74,19 +99,27 @@ public class Main
 	}
 	
 	
-	private int buscarPosicion(Empleado empleado)
+	
+	
+	private static int buscarPosicion(Cliente cliente)
 	{
 		int posicion=-1;
-		for(int i=0;i<empleados.length;i++)
+		for(int i=0;i<clientes.length;i++)
 		{
-			if(empleados[i].clave==empleado.clave)
+			if(clientes[i].clave==cliente.clave)
 				posicion=i;
 		}
 		return posicion;
 	}
 	
 	
-	private void displayMenu()
+	
+	
+	
+	
+	
+	
+	private static void displayMenu()
 	{
 		System.out.println("------Menú------");
 		System.out.println("1. Dar de alta un cliente");

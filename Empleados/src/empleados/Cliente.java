@@ -1,6 +1,6 @@
 package empleados;
 
-public class Empleado 
+public class Cliente 
 {
 	public int clave;
 	public String nombre;
@@ -8,7 +8,7 @@ public class Empleado
 	public char estadoCivil;
 	public int siguiente;
 	
-	public Empleado(int clave, String nombre, int edad, char estadoCivil, int siguiente) 
+	public Cliente(int clave, String nombre, int edad, char estadoCivil, int siguiente) 
 	{
 		super();
 		this.clave = clave;
