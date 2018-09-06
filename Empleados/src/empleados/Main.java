@@ -15,6 +15,7 @@ public class Main
 	public static void main(String[] args)
 	{
 	    int opcion=0;
+	    Cliente clienteEliminar;
 	    while(opcion!=4)
 	    {
 	    	displayMenu();
@@ -23,9 +24,20 @@ public class Main
 	    	{
 	    	case 1:
 	    		indiceArreglo++;
-	    		clientes[indiceArreglo]=guardarCliente();
+	    		if(indiceArreglo<numEmpleados)
+	    			clientes[indiceArreglo]=guardarCliente();
+	    		else
+	    			System.out.println("No queda espacio disponible para almacenar más empleados");
 	    		break;
 	    	case 2:
+	    		if(indiceArreglo!=-1)
+	    		{
+	    			clienteEliminar=guardarCliente();
+		    		if(eliminarCliente(clienteEliminar))
+		    			System.out.println("Cliente removido");
+		    		else
+		    			System.out.println("Cliente no encontrado");
+	    		}
 	    		break;
 	    	case 3:
 	    		break;
@@ -44,16 +56,16 @@ public class Main
 		String nombre;
 		Cliente cliente;
 		char estadoCivil;
-        System.out.println("Ingrese Clave del empleado");
+        System.out.println("Ingrese Clave del cliente");
 		clave=scan.nextInt();
-		System.out.println("Ingrese Nombre del empleado");
+		System.out.println("Ingrese Nombre del cliente");
 		scan.nextLine();
-		nombre=scan.nextLine();
-		System.out.println("Ingrese edad del empleado");
+		nombre=scan.nextLine().toLowerCase();
+		System.out.println("Ingrese edad del cliente");
 		edad=scan.nextInt();
-		System.out.println("Ingrese Estado Civil del empleado");
+		System.out.println("Ingrese Estado Civil del cliente");
 		scan.nextLine();
-		estadoCivil=scan.nextLine().charAt(0);
+		estadoCivil=scan.nextLine().toUpperCase().charAt(0);
 		cliente=new Cliente(clave,nombre,edad,estadoCivil,-1);
 		cliente.siguiente=calcularSiguiente(cliente);
 		return cliente;	
@@ -63,11 +75,11 @@ public class Main
 	private static int calcularSiguiente(Cliente cliente)
 	{
 		int siguiente=-1;
-		if(clientes[0]==null)
+		if(indiceArreglo>-1)
 		{
 			clienteMayor=cliente;
 			clienteMenor=cliente;
-			inicio=buscarPosicion(cliente);
+			inicio=0;
 		}
 		else
 		{
@@ -106,17 +118,40 @@ public class Main
 	private static int buscarPosicion(Cliente cliente)
 	{
 		int posicion=-1;
-		for(int i=0;i<indiceArreglo;i++)
+		if(indiceArreglo>-1)
 		{
-			if(clientes[i].clave==cliente.clave)
-				posicion=i;
+		   for(int i=0;i<=indiceArreglo;i++)
+		   {
+			   if(clientes[i].compareTo(cliente)==0)
+			   {
+				   posicion=i;
+				   break;
+			   }
+		   }
 		}
 		return posicion;
 	}
 	
 	
 	
-	
+	private static boolean eliminarCliente(Cliente cliente)
+	{
+		boolean existe=false;
+		int posicionLogica=clienteMenor.siguiente,posicion=buscarPosicion(cliente);
+		while(posicionLogica!=-1)
+		{
+			if(clientes[posicionLogica].nombre.compareTo(cliente.nombre)==1)
+			{
+				clientes[posicionLogica].siguiente=cliente.siguiente;
+				cliente.siguiente=-2;
+				break;
+			}
+			posicionLogica=clientes[posicionLogica].siguiente;
+		}
+		if (posicion!=-1)
+			existe=true;
+		return existe;
+	}
 	
 	
 	
