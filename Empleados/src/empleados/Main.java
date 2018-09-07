@@ -40,8 +40,10 @@ public class Main
 	    		}
 	    		break;
 	    	case 3:
-	    		break;
-	    	case 4:
+	    		if(indiceArreglo!=-1)
+	    			mostrarEnOrden();
+	    		else
+	    			System.out.println("Parece que no hay clientes para mostrare todavia...");
 	    		break;
 	    		default:System.out.println("La opción ingresada no es válida");
 	    	}
@@ -75,7 +77,7 @@ public class Main
 	private static int calcularSiguiente(Cliente cliente)
 	{
 		int siguiente=-1;
-		if(indiceArreglo>-1)
+		if(indiceArreglo==0)
 		{
 			clienteMayor=cliente;
 			clienteMenor=cliente;
@@ -120,7 +122,7 @@ public class Main
 		int posicion=-1;
 		if(indiceArreglo>-1)
 		{
-		   for(int i=0;i<=indiceArreglo;i++)
+		   for(int i=0;i<indiceArreglo;i++)
 		   {
 			   if(clientes[i].compareTo(cliente)==0)
 			   {
@@ -151,6 +153,19 @@ public class Main
 		if (posicion!=-1)
 			existe=true;
 		return existe;
+	}
+	
+	
+	
+	private static void mostrarEnOrden()
+	{
+		System.out.println(clienteMenor.toString());
+		int posicionLogica=clienteMenor.siguiente;
+		while(posicionLogica!=-1)
+		{
+			System.out.println(clientes[posicionLogica].toString());
+			posicionLogica=clientes[posicionLogica].siguiente;
+		}
 	}
 	
 	

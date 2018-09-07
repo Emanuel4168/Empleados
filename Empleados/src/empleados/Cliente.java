@@ -32,4 +32,11 @@ public class Cliente implements Comparable
 		return comparacion;
 	}
 
+	
+	
+	@Override
+	public String toString() {
+		return "| " + clave + " | " + nombre + " | " + edad + " | " + estadoCivil+" |";
+	}
+
 }
