@@ -15,14 +15,15 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-	    int opcion=0,claveEliminar=0;
-	    while(opcion!=4)
+	    String opcion = " ";
+	    int claveEliminar=0;
+	    while(!opcion.equals("4"))
 	    {
 	    	displayMenu();
-	    	opcion=scan.nextInt();
+	    	opcion=scan.next();
 	    	switch(opcion)
 	    	{
-	    	case 1:
+	    	case "1":
 	    		indiceArreglo++;
 	    		if(indiceArreglo<numEmpleados)
 	    			clientes[indiceArreglo]=guardarCliente();
@@ -31,7 +32,7 @@ public class Main
 	    		if(vacioLogico)
 	    			vacioLogico=false;
 	    		break;
-	    	case 2:
+	    	case "2":
 	    		if(indiceArreglo!=-1)
 	    		{
 	    			System.out.println("introduzca la clave del cliente a eliminar");
@@ -42,7 +43,7 @@ public class Main
 		    			System.out.println("Cliente no encontrado");
 	    		}
 	    		break;
-	    	case 3:
+	    	case "3":
 	    		if(indiceArreglo!=-1 && !vacioLogico)
 	    			mostrarEnOrden();
 	    		else
@@ -88,7 +89,7 @@ public class Main
 		int siguiente=-1;
 		if(indiceArreglo==0 || vacioLogico)
 		{
-			System.out.println(1);
+			//System.out.println(1);
 			clienteMayor=cliente;
 			clienteMenor=cliente;
 			inicio=0;
@@ -163,13 +164,13 @@ public class Main
 		boolean existe=false;
 		int posicionLogica=inicio;
 		Cliente clienteAnterior=clienteMenor;
-		System.out.println(clienteAnterior.siguiente);
+		//System.out.println(clienteAnterior.siguiente);
 		if(clienteMenor.compareTo(clienteEliminar)==0)
 		{
 			System.out.println(1);
 			try
 			{
-				System.out.println(clienteMenor.siguiente);
+				//System.out.println(clienteMenor.siguiente);
 				clienteMenor=clientes[clienteMenor.siguiente];
 				inicio=buscarPosicion(clienteMenor.clave);
 			}
@@ -181,7 +182,7 @@ public class Main
 		}
 		else
 		{
-			System.out.println(2);
+			//System.out.println(2);
 			while(posicionLogica!=-1)
 			{
 				if(clientes[posicionLogica].nombre.compareTo(clienteEliminar.nombre)>=0)
@@ -206,12 +207,12 @@ public class Main
 	private static void mostrarEnOrden()
 	{
 		System.out.println(clienteMenor.toString());
-		System.out.println(clienteMenor.siguiente);
+		//System.out.println(clienteMenor.siguiente);
 		int posicionLogica=clienteMenor.siguiente;
 		while(posicionLogica!=-1)
 		{
 			System.out.println(clientes[posicionLogica].toString());
-			System.out.println(clientes[posicionLogica].siguiente);
+			//System.out.println(clientes[posicionLogica].siguiente);
 			posicionLogica=clientes[posicionLogica].siguiente;
 		}
 	}

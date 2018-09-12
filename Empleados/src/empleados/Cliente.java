@@ -37,7 +37,7 @@ public class Cliente implements Comparable
 	@Override
 	public String toString() 
 	{
-		return "| " + clave + " | " + nombre + " | " + edad + " | " + estadoCivil+" |";
+		return "| " + clave + "\t| " + nombre + " \t|" + edad + "\t|" + estadoCivil+"\t|";
 	}
 
 	
