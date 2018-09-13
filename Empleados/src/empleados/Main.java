@@ -72,6 +72,11 @@ public class Main
 		}
 		System.out.println("Ingrese Nombre del cliente");
 		scan.nextLine();
+		while(buscarClave(clave))
+		{
+			System.out.println("Esta nombre ya ha sido registrado, ingrese un nombre válido");
+			nombre=scan.nextLine();
+		}
 		nombre=scan.nextLine().toLowerCase();
 		System.out.println("Ingrese edad del cliente");
 		edad=scan.nextInt();
@@ -226,6 +231,14 @@ public class Main
 				existeClave=true;
 		}
 		return existeClave;
+	}
+	
+	private static boolean buscarNombre(String nombre)
+	{
+		for(int i=0;i<indiceArreglo;i++)
+			if(clientes[i].nombre.equals(nombre))
+				return true;
+		return false;
 	}
 	
 	
