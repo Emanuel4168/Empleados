@@ -15,8 +15,7 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-	    String opcion = " ";
-	    int claveEliminar=0;
+	    String opcion = " ",nombreClienteEliminar;
 	    while(!opcion.equals("4"))
 	    {
 	    	displayMenu();
@@ -33,15 +32,18 @@ public class Main
 	    			vacioLogico=false;
 	    		break;
 	    	case "2":
-	    		if(indiceArreglo!=-1)
+	    		if(indiceArreglo!=-1 && !vacioLogico)
 	    		{
 	    			System.out.println("introduzca la clave del cliente a eliminar");
-	    			claveEliminar=scan.nextInt();
-		    		if(eliminarCliente(claveEliminar))
+	    			scan.nextLine();
+	    			nombreClienteEliminar=scan.nextLine().toLowerCase();
+		    		if(eliminarCliente(nombreClienteEliminar))
 		    			System.out.println("Cliente removido");
 		    		else
 		    			System.out.println("Cliente no encontrado");
 	    		}
+	    		else
+	    			System.out.println("Aun no hay clientes por eliminar");
 	    		break;
 	    	case "3":
 	    		if(indiceArreglo!=-1 && !vacioLogico)
@@ -60,19 +62,14 @@ public class Main
 	private static Cliente guardarCliente()
 	{	
         int clave,edad;
-		String nombre;
+		String nombre="";
 		Cliente cliente;
 		char estadoCivil;
         System.out.println("Ingrese Clave del cliente");
 		clave=scan.nextInt();
-		while(buscarClave(clave))
-		{
-			System.out.println("Esta Clave pertenece a otro cliente, inténtelo de nuevo");
-			clave=scan.nextInt();
-		}
 		System.out.println("Ingrese Nombre del cliente");
 		scan.nextLine();
-		while(buscarClave(clave))
+		while(buscarNombre(nombre))
 		{
 			System.out.println("Esta nombre ya ha sido registrado, ingrese un nombre válido");
 			nombre=scan.nextLine();
@@ -89,6 +86,8 @@ public class Main
 	}
 	
 	
+	
+	
 	private static int calcularSiguiente(Cliente cliente)
 	{
 		int siguiente=-1;
@@ -99,44 +98,38 @@ public class Main
 			clienteMenor=cliente;
 			inicio=0;
 		}
+		else if(cliente.nombre.compareTo(clienteMenor.nombre)<0)
+		{
+			//System.out.println(2);
+			siguiente=inicio;
+			inicio=indiceArreglo;
+			clienteMenor=cliente;
+		}
+		else if(cliente.nombre.compareTo(clienteMayor.nombre)>0)
+		{
+			//System.out.println(3);
+			clienteMayor.siguiente=indiceArreglo;
+			clienteMayor=cliente;
+		}
 		else
 		{
-			if(cliente.nombre.compareTo(clienteMenor.nombre)<0)
+			//System.out.println(4);
+			int posicionLogica=clienteMenor.siguiente;
+			Cliente clienteAnterior =clienteMenor;
+			while(posicionLogica!=-1)
 			{
-				//System.out.println(2);
-				siguiente=inicio;
-				inicio=indiceArreglo;
-				clienteMenor=cliente;
-				System.out.println(siguiente);
-			}
-			else if(cliente.nombre.compareTo(clienteMayor.nombre)>0)
-			{
-				//System.out.println(3);
-				clienteMayor.siguiente=indiceArreglo;
-			    clienteMayor=cliente;
-			}
-			else
-			{
-				//System.out.println(4);
-				int posicionLogica=clienteMenor.siguiente;
-				Cliente clienteAnterior =clienteMenor;
-				while(posicionLogica!=-1)
+				if(clientes[posicionLogica].nombre.compareTo(cliente.nombre)>0)
 				{
-					if(clientes[posicionLogica].nombre.compareTo(cliente.nombre)>0)
-					{
-						siguiente=buscarPosicion(clientes[posicionLogica].clave);
-						//System.out.println(buscarPosicion(clientes[posicionLogica]));
-						clienteAnterior.siguiente=indiceArreglo;
-						break;
-					}
-					else
-					{
-						clienteAnterior=clientes[posicionLogica];
-					}
-					posicionLogica=clientes[posicionLogica].siguiente;
+					siguiente=buscarPosicion(clientes[posicionLogica].nombre);
+					//System.out.println(buscarPosicion(clientes[posicionLogica]));
+					clienteAnterior.siguiente=indiceArreglo;
+					break;
 				}
-			}	
-		}
+				clienteAnterior=clientes[posicionLogica];
+				posicionLogica=clientes[posicionLogica].siguiente;
+			}
+		}	
+		
 		return siguiente;
 		
 	}
@@ -144,14 +137,14 @@ public class Main
 	
 	
 	
-	private static int buscarPosicion(int clave)
+	private static int buscarPosicion(String nombre)
 	{
 		int posicion=-1;
 		if(indiceArreglo>-1)
 		{
 		   for(int i=0;i<=indiceArreglo;i++)
 		   {
-			   if(clientes[i].clave==clave)
+			   if(clientes[i].nombre.equalsIgnoreCase(nombre))
 			   {
 				   posicion=i;
 				   break;
@@ -163,21 +156,29 @@ public class Main
 	
 	
 	
-	private static boolean eliminarCliente(int clave)
+	private static boolean eliminarCliente(String nombre)
 	{
-		Cliente clienteEliminar=clientes[buscarPosicion(clave)];
+		Cliente clienteEliminar;
+		try
+		{
+			clienteEliminar=clientes[buscarPosicion(nombre)];
+		}
+		catch(ArrayIndexOutOfBoundsException e)
+		{
+			return false;
+		}
 		boolean existe=false;
 		int posicionLogica=inicio;
 		Cliente clienteAnterior=clienteMenor;
 		//System.out.println(clienteAnterior.siguiente);
-		if(clienteMenor.compareTo(clienteEliminar)==0)
+		if(clienteMenor.nombre.compareTo(clienteEliminar.nombre)==0)
 		{
 			System.out.println(1);
 			try
 			{
 				//System.out.println(clienteMenor.siguiente);
 				clienteMenor=clientes[clienteMenor.siguiente];
-				inicio=buscarPosicion(clienteMenor.clave);
+				inicio=buscarPosicion(clienteMenor.nombre);
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
@@ -195,10 +196,7 @@ public class Main
 					clienteAnterior.siguiente=clienteEliminar.siguiente;
 					break;
 				}
-				else
-				{
-					clienteAnterior=clientes[posicionLogica];
-				}
+				clienteAnterior=clientes[posicionLogica];
 				posicionLogica=clientes[posicionLogica].siguiente;
 			}
 		}
@@ -211,27 +209,16 @@ public class Main
 	
 	private static void mostrarEnOrden()
 	{
-		System.out.println(clienteMenor.toString());
-		//System.out.println(clienteMenor.siguiente);
-		int posicionLogica=clienteMenor.siguiente;
+		int posicionLogica=inicio;
 		while(posicionLogica!=-1)
 		{
 			System.out.println(clientes[posicionLogica].toString());
-			//System.out.println(clientes[posicionLogica].siguiente);
 			posicionLogica=clientes[posicionLogica].siguiente;
 		}
 	}
 	
-	private static boolean buscarClave(int clave)
-	{
-		boolean existeClave=false;
-		for(int i=0;i<indiceArreglo;i++)
-		{
-			if(clientes[i].clave==clave)
-				existeClave=true;
-		}
-		return existeClave;
-	}
+	
+	
 	
 	private static boolean buscarNombre(String nombre)
 	{
